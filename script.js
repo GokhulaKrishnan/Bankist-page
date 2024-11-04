@@ -26,9 +26,6 @@ const closeModal = function () {
 
 btnsOpenModal.forEach(btn => btn.addEventListener('click', openModal));
 
-// for (let i = 0; i < btnsOpenModal.length; i++)
-//   btnsOpenModal[i].addEventListener('click', openModal);
-
 btnCloseModal.addEventListener('click', closeModal);
 overlay.addEventListener('click', closeModal);
 
@@ -42,67 +39,19 @@ document.addEventListener('keydown', function (e) {
 
 // going to add event listner for the scroll to button
 btnScrollTo.addEventListener('click', function (e) {
-  // getBoundingClientRect() method returns a DOMRect object providing information about the size of an element and its position relative to the viewport. If we scroll the screen then size differs.
-  // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+ 
   const s1coords = section1.getBoundingClientRect();
-  /*
-  console.log(s1coords);
-  console.log(e.target.getBoundingClientRect());
-
-  // returns the number of pixels that the document is currently scrolled horizontally.
-  console.log('Current Scroll(X/Y:', window.pageXOffset, window.pageYOffset);
-
-  // ClientHeight and ClientWidth returns the height and width of the viewport
-  console.log(
-    'height/width viewport:',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-  */
-
-  // IMplementing scrolling in the old way
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // );
-
-  // Implementing smooth scrolling feature. This is an old way implementation
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
-
+  
   // Modern way implementation
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
-////////////////////////////////////////////////
-
-// PAGE NAVIGATION
-
-// One of the way of doing it
-
-// Selecting all the nav__link btns
-// However this is a correct way of doing it, it is not the most efficient technique because suppose if we have 1000 links then 1000 copies will be created. So the alternate way is to use event delegation
-/*
-document.querySelectorAll('.nav__link').forEach(ele => {
-  ele.addEventListener('click', function (e) {
-    e.preventDefault();
-    const secId = this.getAttribute('href');
-    // console.log(secId);
-    // Now we can use scrollIntoView
-    document.querySelector(secId).scrollIntoView({ behavior: 'smooth' });
-  });
-});
-*/
 
 // EVENT DELEGATION
 // In this we can assign a event listner to the parent element and use bubbling concept to execute scrolling for each of the links
 
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
-  // console.log(e.target);
   // Checking strategy as we want to execute only when we click on the link
   if (e.target.classList.contains('nav__link')) {
     document
@@ -117,7 +66,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 
 // Applying event delegation
 tabsContainer.addEventListener('click', function (e) {
-  // console.log(e.target);
+
   // matching strategy
   const clicked = e.target.closest('.operations__tab');
 
@@ -137,7 +86,6 @@ tabsContainer.addEventListener('click', function (e) {
     .classList.add('operations__content--active');
 });
 
-////////////////////////////////////
 
 // MENU FADE OUT ANIMATION
 
@@ -173,23 +121,6 @@ window.addEventListener('scroll', function (e) {
     nav.classList.remove('sticky');
   }
 });
-// However using this scroll event is not very efficient
-// We can use INTERSECTIONOBSERVER to make it more efficient
-
-// IntersectionObserver
-/*
-const callbackFn = function (entries, observer) {
-  entries.forEach(E => console.log(E));
-};
-
-const options = {
-  root: null,
-  threshold: 0.3,
-};
-
-const observer = new IntersectionObserver(callbackFn, options);
-observer.observe(section1);
-*/
 
 const header = document.querySelector('.header'); // we are going to observe the header
 const navHeight = nav.getBoundingClientRect().height;
@@ -238,7 +169,8 @@ allSection.forEach(function (section) {
 
 // LAZY LOADING
 
-// lazy loading is used in a site to make it more efficient and performance oriented. This will at first have a very low resolution img in the site which is added a blur filter, while scroll up the site, with the help of intersectionObserver we will replace the lazy-img with the actual img
+// lazy loading is used in a site to make it more efficient and performance oriented. This will at first have a very low resolution img in the site 
+// which is added a blur filter, while scroll up the site, with the help of intersectionObserver we will replace the lazy-img with the actual img
 
 const targetImg = document.querySelectorAll('img[data-src]'); // This means we want only the imgs that has data-src attribute because we dont want to select all the imgs
 
@@ -279,11 +211,6 @@ const slider = function () {
   const dotContainer = document.querySelector('.dots');
   let currSlide = 0;
   const maxSlide = slides.length;
-
-  // To make it view slide side by side
-  // const slider = document.querySelector('.slider');
-  // slider.style.transform = 'scale(0.4) translateX(-800px)';
-  // slider.style.overflow = 'visible';
 
   // to place it side by side /
 
@@ -371,225 +298,6 @@ const slider = function () {
 };
 
 slider();
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
-//LECTURES
-
-// SELECTING ELEMENTS
-/*
-
-console.log(document.documentElement); // for selecting all the elements
-console.log(document.head); // for selecting the header
-console.log(document.body); // for selecting the body
-
-// As we know
-const header = document.querySelector('.header');
-const allSection = document.querySelectorAll('.section'); // all elements
-console.log(allSection);
-
-document.getElementById('section--1'); // selects the first element with this name
-const allBtns = document.getElementsByTagName('button'); // will return a HTMLCOLLECTION which will get automatically updated whereas NODELIST will not get updated.
-console.log(allBtns);
-
-console.log(document.getElementsByClassName('btn'));
-
-// CREATING AND INSERTING ELEMENTS
-const message = document.createElement('div'); // it now acts as an obj like any other ele chosen by querySelector
-message.classList.add('cookie-message');
-// message.textContent = 'We use cookie for improved functionality and analytics';
-message.innerHTML = `We use cookie for improved functionality and analytics <button class="btn btn--close-cookie">Got it!<button?`;
-// header.prepend(message); // this will add that ele as the first ele inside the header
-header.append(message); //this will add that ele as the last ele inside the header
-
-// what if we want to have it at both at first and last. For that we have to copy it
-// header.append(message.cloneNode('true'));
-
-// Theres also two more methods which will add the element before/after the header element as a sibling
-header.after(message); // after the header ele
-// header.before(message); // before the header ele
-
-// DELETE ELEMENT
-
-// we want to delete the cookie msg once we click the got it button
-document
-  .querySelector('.btn--close-cookie')
-  .addEventListener('click', function () {
-    message.remove(); // this will delete the ele
-  });
-
-// STYLE
-
-message.style.backgroundColor = '#37383d';
-message.style.width = '120%';
-
-console.log(message.style.height); // this will simply return nothing because this will show op only if we set it manually like lin 83
-console.log(message.style.backgroundColor);
-
-// If you really want to know the style given to that element, you can use this
-console.log(getComputedStyle(message).color);
-console.log(getComputedStyle(message).height);
-
-// suppose we want to add another 40px to the height of the cookie-msg
-message.style.height =
-  Number.parseFloat(getComputedStyle(message).height) + 40 + 'px'; // We are parse floating because
-
-// changing a property that is in root
-document.documentElement.style.setProperty('--color-primary', 'orangered');
-
-// ATTRIBUTES
-const logo = document.querySelector('.nav__logo');
-console.log(logo.alt);
-console.log(logo.src); // This will return the absolute address
-
-// We can also change the values of attributes
-logo.alt = 'Beautiful minimalist logo';
-
-// Non-standard
-console.log(logo.designer); // undefined because this not a regular property of img tag
-
-// Theres also a way to extract thst value
-console.log(logo.getAttribute('designer'));
-// Setting a non standard property in a tag
-logo.setAttribute('company', 'Bankist');
-
-console.log(logo.src); // returns absolute value
-console.log(logo.getAttribute('src')); // returns relative value
-
-const link = document.querySelector('.twitter-link');
-console.log(link.href); // returns relative
-console.log(link.getAttribute('href')); // returns relative
-
-// Data Attribute
-console.log(logo.dataset.versionNumber); // We use this quite a lot, we use it to store data in UI basically in HTML code
-
-// Classes
-
-logo.classList.add('c', 'j');
-logo.classList.remove('c', 'j');
-logo.classList.toggle('c');
-logo.classList.contains('c');
-
-// We can also use this to add a class name. But this is erase all the exisiting class name and assign only this class name whereas in the above methods, it is used to add multiple class name.
-// logo.className = 'c';
-*/
-/*
-
-const h1 = document.querySelector('h1');
-
-const alertH1 = function (e) {
-  alert('mouseEnter: Great you are reading the heading!');
-
-  // Removing the event listner after one mouseenter event
-  // h1.removeEventListener('mouseenter', alertH1);
-};
-
-// Adding event listner to the h1 tag, whenever we hover it display alert msg
-// h1.addEventListener('mouseenter', function (e) {
-//   alert('mouseEnter: Great you are reading the heading!');
-// });
-// Check MDN for more event listners
-h1.addEventListener('mouseenter', alertH1);
-
-// Thers another way of adding event listner which is addding event to it directly
-// h1.onmouseenter = function (e) {
-//   alert('mouseEnter: Great you are reading the heading!');
-// };
-
-// We can remove event listner wherever we want
-
-setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
-
-// And you can even call event as an inline ele as an attribute but they are old school way and they are not used largely.
-
-// NOW WE ARE GOING TO SEE ABOUT EVENT PROPAGATION
-
-// PHASE 1 CAPTURING
-// PHASE 2 TARGETING
-// PHASE 3 BUBBLING
-
-// creating a function that gives random color
-
-const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-const randomColor = () =>
-  `rgb(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)})`;
-
-// Explaining the concept of event propagation
-document.querySelector('.nav__link').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor(); // Here 'this' will point out to the class in which eventListner is added on
-  console.log('LINK', e.target, e.currentTarget);
-  console.log(this === e.currentTarget);
-});
-
-// adding event listner on parent ele of nav__link
-document.querySelector('.nav__links').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log('CONTAINER', e.target, e.currentTarget);
-});
-
-// adding event listner on parent ele of nav__links
-document.querySelector('.nav').addEventListener(
-  'click',
-  function (e) {
-    this.style.backgroundColor = randomColor();
-    console.log('NAV', e.target, e.currentTarget);
-  },
-  true
-);
-
-// The reason why all the the three bg color changes is because of the concept bubbling, it executes the captured events in the bubbling phase
-// We can execute event listner in the capturing phase by adding the third parameter to the addEventListner fn and setting t as true
-*/
-
-// DOM TRAVERSING
-/*
-
-// DOM traversing is nothing but traversing through the DOM elements
-const h1 = document.querySelector('h1');
-
-//==========
-// GOING DOWNWARDS: child
-console.log(h1.querySelectorAll('.highlight')); // These are the elements with highlight classname that are under the h1 tag. It wont select the elements that has the same class name but outside the h1 tag
-
-console.log(h1.childNodes); // this will return all nodes that contains all the elements that are childrens of h1 which includes text, comment etc.
-
-console.log(h1.children); // this will return the direct children tag of h1 tag
-
-h1.firstElementChild.style.color = 'white'; // this will select the first element of h1 tag
-
-h1.lastElementChild.style.color = 'orangered'; // this will select the last element of h1 tag
-
-//==========
-
-// GOING UPWARDS: parent
-console.log(h1.parentNode); // Direct parent nodes
-
-console.log(h1.parentElement); // returns parent element
-
-h1.closest('.header').style.background = 'var(--gradient-secondary)'; // closest will find the closest mentioned parent element which is present at any level of the DOM tree.
-
-h1.closest('h1').style.background = 'var(--gradient-primary)'; // since there is no h1 parent tag above the h1 tag, it will return the same tag.
-
-// ===============
-
-// GOING SIDEWAYS: siblings
-console.log(h1.previousElementSibling); // previous sibling
-console.log(h1.nextElementSibling); // next sibling
-
-console.log(h1.previousSibling); // node
-console.log(h1.nextSibling); // node
-
-console.log(h1.parentElement.children); // selecting the children of h1 parent tag
-
-[...h1.parentElement.children].forEach(function (el) {
-  if (el !== h1) el.style.transform = 'scale(0.5)';
-});
-*/
-
-// LIFECYCLE DOM EVENTS
-
-// These events occur automatically in a web page
-
-// DOMContentLoaded is a event that gets executed when the HTML content and DOM tree is created
 
 document.addEventListener('DOMContentLoaded', function (e) {
   console.log('HTML parsed and DOM tree loaded!', e);
